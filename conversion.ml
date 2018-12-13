@@ -1,3 +1,4 @@
+
 let split_on_char sep s =
   let r = ref [] in
   let j = ref (String.length s) in
@@ -8,38 +9,35 @@ let split_on_char sep s =
     end
   done;
   String.sub s 0 !j :: !r;;
-
+let f = fun a -> Printf.printf " %s \n" a;; 
 let coordfun = fun list ->
   let rec coord_rec = fun list coor ->
     match list with
         "z\""::queue ->
           coor;
-          print_string("fin");
       |tete::queue ->
-        coor = List.append coor [tete];
-        print_string(tete);
+        let coor = tete::coor in
         coord_rec queue coor;
       |_ ->
-        ["pb"];
-        print_string("pb") in
+        ["fin"] in
   coord_rec list [];;
 
 let conv = fun a ->
   let fic = open_in "dessin.svg" in
-  let rec conv_rec() =
+  let rec conv_rec coord_list =
     try
       let ligne = input_line fic in
       let lignesep = split_on_char ' ' ligne in
       let rec recherche = fun lsep ->
         match lsep with
-            "d=\"m"::queue -> coordfun(queue);
-          |tete::queue -> print_string("a"); recherche queue;
-          |[] -> print_string("fin") in
-      recherche lignesep;
-      print_newline();
-      conv_rec();
+            "d=\"m"::queue ->coordfun queue; 
+          |tete::queue -> recherche queue;
+          |"</svg>" -> coord_list ;
+          |_ -> [];
+      let coord_list =(recherche lignesep)::coord_list in
+      conv_rec coord_list; 
     with End_of_file -> close_in fic
-  in conv_rec();;
+  in conv_rec [];;
 
 conv 1;;
 

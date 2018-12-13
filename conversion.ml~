@@ -25,7 +25,7 @@ let coordfun = fun list ->
   coord_rec list [];;
 
 let conv = fun a ->
-  let fic = open_in "C:/Users/Pierre/Desktop/dessin.svg" in
+  let fic = open_in "dessin.svg" in
   let rec conv_rec() =
     try
       let ligne = input_line fic in
