@@ -1,4 +1,3 @@
-
 let split_on_char sep s =
   let r = ref [] in
   let j = ref (String.length s) in
@@ -9,7 +8,7 @@ let split_on_char sep s =
     end
   done;
   String.sub s 0 !j :: !r;;
-let f = fun a -> Printf.printf " %s \n" a;; 
+let f = fun a -> Printf.printf " %s |" a;; 
 let coordfun = fun list ->
   let rec coord_rec = fun list coor ->
     match list with
@@ -30,16 +29,12 @@ let conv = fun a ->
       let lignesep = split_on_char ' ' ligne in
       let rec recherche = fun lsep ->
         match lsep with
-            "d=\"m"::queue ->coordfun queue; 
+            "d=\"m"::queue ->List.rev (coordfun queue); 
+          |"</svg>"::_ -> [];
           |tete::queue -> recherche queue;
-          |"</svg>" -> coord_list ;
-          |_ -> [];
-      let coord_list =(recherche lignesep)::coord_list in
-      conv_rec coord_list; 
-    with End_of_file -> close_in fic
-  in conv_rec [];;
+          |_ -> [] in 
+      conv_rec (recherche lignesep)@coord_list;  
+    with End_of_file -> close_in fic;coord_list in
+  conv_rec [];;
 
-conv 1;;
-
-
-  
+List.iter f (conv 1);;
