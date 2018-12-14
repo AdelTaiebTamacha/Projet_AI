@@ -1,3 +1,4 @@
+open Type;;
 let split_on_char sep s =
   let r = ref [] in
   let j = ref (String.length s) in
@@ -37,4 +38,14 @@ let conv = fun a ->
     with End_of_file -> close_in fic;coord_list in
   conv_rec [];;
 
+
+
 List.iter f (conv 1);;
+
+let trapeze = { ent_int=(1,2);
+                ent_ext = (4,5);
+                sort_int=(7,8);
+              sort_ext=(2,78)} in
+let (x,y) = trapeze.ent_int in
+Printf.printf "%d,%d" x y;;  
+
