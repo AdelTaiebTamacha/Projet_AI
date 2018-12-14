@@ -1,8 +1,1 @@
-type point =
-  | EntInt of int*int
-  | EntExt of int*int
-  | SortInt of int*int
-  | SortExt of int*int;;
-
-type trapeze =
-  | Portion of point*point*point*point;;
+type portion = { EntInt : int*int; EntExt : int*int; SortInt : int*int; SortExt : int*int };;
