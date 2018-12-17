@@ -38,9 +38,26 @@ let conv = fun a ->
     with End_of_file -> close_in fic;coord_list in
   conv_rec [];;
 
+let trace = fun list -> 
+  let milieu = (List.length list)/2 in
+  let interieur = ref [] in
+  let exterieur = ref [] in 
+  for i = 0 to (milieu-1) do
+    exterieur := (List.nth list i)::(!exterieur);
+  done;
+  for i = milieu to (List.length list - 1) do
+    interieur := (List.nth list  i)::(!interieur);
+  done;
+  interieur := List.rev !interieur;
+  exterieur := List.rev !exterieur;
+  print_string "\n";
 
 
-List.iter f (conv 1);;
+
+let a = conv 1 in
+List.iter f a;
+print_string "\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n";
+trace a;;
 
 let trapeze = { ent_int=(1,2);
                 ent_ext = (4,5);
