@@ -9,7 +9,25 @@ let split_on_char sep s =
     end
   done;
   String.sub s 0 !j :: !r;;
-let f = fun a -> Printf.printf " %s |" a;; 
+
+let trad = fun text -> 
+  let att = split_on_char ',' text in 
+  let x = float_of_string (List.hd att)in 
+  let y = float_of_string (List.hd (List.tl att))in
+  (x,y);;
+let f = fun a -> Printf.printf " %f |" a;; 
+let print_tuple = fun (x,y) -> Printf.printf "%f,%f\n" x y;;  
+let somme = fun (x,y) (v,w) -> (x+.v,y+.w);;
+let print_portion = fun port ->
+  let (a,b) = port.ent_int in
+  let (c,d) = port.ent_ext in
+  let (e,f) = port.sort_int in 
+  let (g,h) = port.sort_ext in
+  Printf.printf "(%f,%f) (%f,%f) (%f,%f) (%f,%f)\n" a b c d e f g h;;
+
+
+
+
 let coordfun = fun list ->
   let rec coord_rec = fun list coor ->
     match list with
@@ -38,8 +56,12 @@ let conv = fun a ->
     with End_of_file -> close_in fic;coord_list in
   conv_rec [];;
 
-let trace = fun list -> 
+let trapeze = fun list -> 
   let milieu = (List.length list)/2 in
+  let trap_tab = Array.make milieu  {ent_int= (0.,0.);
+                                     ent_ext = (0.,0.);
+                                     sort_int = (0.,0.);
+                                     sort_ext = (0.,0.)} in
   let interieur = ref [] in
   let exterieur = ref [] in 
   for i = 0 to (milieu-1) do
@@ -50,19 +72,28 @@ let trace = fun list ->
   done;
   interieur := List.rev !interieur;
   exterieur := List.rev !exterieur;
-  print_string "\n";
+  let rec trace_points = fun acc liste_points liste ->
+    match liste  with
+        tete::queue -> let racc = (somme (trad tete) acc) in 
+                       let liste_points = racc::liste_points in
+                       trace_points racc liste_points queue;
+      |[]-> List.rev liste_points in
+  let inter_points = trace_points (0.,0.) [] !interieur in
+  let exter_points  = trace_points (0.,0.) [] !exterieur in
+  for i = 0 to (milieu-2) do
+    trap_tab.(i) <- { ent_int= List.nth inter_points i;
+                          ent_ext = List.nth exter_points i ;
+                          sort_int = List.nth inter_points (i+1);
+                          sort_ext = List.nth exter_points (i+1)};
+  done;
+  trap_tab.(milieu-1) <- {ent_int= List.nth inter_points (milieu-1);
+                          ent_ext = List.nth exter_points (milieu-1) ;
+                          sort_int = List.nth inter_points 0;
+                          sort_ext = List.nth exter_points 0};
+ (* for i = 0 to (milieu-1) do print_portion trap_tab.(i) done;*)
+  trap_tab;;
 
+let a = conv 1;;
+(*trapeze a;;*)
 
-
-let a = conv 1 in
-List.iter f a;
-print_string "\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n";
-trace a;;
-
-let trapeze = { ent_int=(1,2);
-                ent_ext = (4,5);
-                sort_int=(7,8);
-              sort_ext=(2,78)} in
-let (x,y) = trapeze.ent_int in
-Printf.printf "%d,%d" x y;;  
 
