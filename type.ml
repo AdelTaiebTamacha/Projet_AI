@@ -1,1 +1,1 @@
-type portion = { ent_int : int*int; ent_ext : int*int; sort_int : int*int; sort_ext : int*int };;
+type portion = { ent_int : float*float; ent_ext : float*float; sort_int : float*float; sort_ext : float*float };;
