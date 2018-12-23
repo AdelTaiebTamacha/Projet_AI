@@ -1,5 +1,5 @@
 open Type;;
-let fichier = "dessin5.svg"
+let fichier = "dessin3.svg"
 
 
 
@@ -98,10 +98,10 @@ let trapeze = fun list ->
   for i = !milieu to (List.length list - 1) do
     interieur := (List.nth list  i)::(!interieur);
   done;
-  if (List.length !interieur) != (List.length !exterieur) then begin
+  (*if (List.length !interieur) != (List.length !exterieur) then begin
     print_string "Les deux parties n'ont pas la bonne longueur !!!\n";
     exit 0;
-  end;
+  end;*)
   interieur := List.rev !interieur;
   exterieur := List.rev !exterieur;
   List.iter print_txt !interieur;
@@ -143,6 +143,10 @@ let trapeze = fun list ->
 
   let inter_points = trace_points 'l' (0.,0.) [] !interieur in
   let exter_points  = trace_points 'l' (0.,0.) [] !exterieur in
+  if (List.length inter_points) != (List.length exter_points) then begin
+    print_string "Les deux parties n'ont pas la bonne longueur !!!\n";
+    exit 0;
+  end;
   milieu := (List.length exter_points);
   for i = 0 to (!milieu-2) do
     trap_tab.(i) <- { ent_int= List.nth inter_points i;
