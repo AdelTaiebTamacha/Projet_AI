@@ -1,3 +1,11 @@
+(* 
+To compile and run
+ocamlc graphics.cma type.ml conversion.ml init.ml interface.ml -o interface && ./interface
+To run
+./interface or ./interface.exe
+*)
+
+
 open Graphics;;
 (*open Convert;;*)
 open Printf;;

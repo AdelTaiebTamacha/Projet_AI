@@ -20,16 +20,52 @@ let split_on_char sep s =
     end
   done;
   String.sub s 0 !j :: !r;;
+  
 let trad = fun text -> 
   let att = split_on_char ',' text in 
   let x = float_of_string (List.hd att)in 
   let y = float_of_string (List.hd (List.tl att))in
   (x,y);;
+  
 let print_txt = fun a -> Printf.printf " %s |" a;; 
 let print_tuple = fun (x,y) -> Printf.printf "%f,%f\n" x y;;  
 let somme = fun (x,y) (v,w) -> (x+.v,y+.w);;
 
+(* Function that will validate if the input is a ALPHA *)
+let is_digit_or_moins = fun digit ->
+  match digit with
+      '0' .. '9' -> true;
+    |'-' -> true;
+    | _ -> false;;
 
+(* ################################################################### *)
+(*	                                                                   *)
+(*                         COUNTING FUNCTION                           *)
+(*	                                                                   *)
+(* ################################################################### *)
+	
+
+    
+let rec compte_num = fun i liste -> 
+  match liste with 
+    |tete::queue->
+      if (is_digit_or_moins ((List.hd liste).[0])) then (compte_num (i+1) queue)
+      else compte_num i queue;
+    |[]-> i;;
+    
+let val_coupe = fun liste -> 
+  let limite = (compte_num 0 liste)/2 in 
+  let rec val_coupe_rec = fun compteur_num compteur_mot liste ->
+    match liste with
+      |tete::queue-> 
+        if (is_digit_or_moins (List.hd liste).[0])then  
+          let c_num = compteur_num + 1 in
+          let c_mot = compteur_mot + 1 in 
+          if (c_num == limite) then c_mot
+          else val_coupe_rec c_num c_mot queue;
+        else val_coupe_rec compteur_num (compteur_mot+1) queue;
+      |[]->0 in 
+  val_coupe_rec 0 0 liste;;
 
 (* ################################################################### *)
 (*	                                                                   *)
@@ -50,7 +86,7 @@ let portion_int_of_float = fun port ->
 		 sort_int_int = couple_int_of_float port.sort_int;
 		 sort_ext_int = couple_int_of_float port.sort_ext} in
 	port_int;;
-	
+
 	
 (* ################################################################### *)
 (*	                                                                   *)
@@ -78,33 +114,6 @@ let print_portion_int = fun port ->
 	Printf.printf "(%d,%d) (%d,%d) (%d,%d) (%d,%d)\n" a b c d e f g h;;
 
 
-(* Function that will validate if the input is a ALPHA *)
-let is_digit_or_moins = fun digit ->
-  match digit with
-      '0' .. '9' -> true;
-    |'-' -> true;
-    | _ -> false;;
-    
-let rec compte_num = fun i liste -> 
-  match liste with 
-    |tete::queue->
-      if (is_digit_or_moins ((List.hd liste).[0])) then (compte_num (i+1) queue)
-      else compte_num i queue;
-    |[]-> i;;
-    
-let val_coupe = fun liste -> 
-  let limite = (compte_num 0 liste)/2 in 
-  let rec val_coupe_rec = fun compteur_num compteur_mot liste ->
-    match liste with
-      |tete::queue-> 
-        if (is_digit_or_moins (List.hd liste).[0])then  
-          let c_num = compteur_num + 1 in
-          let c_mot = compteur_mot + 1 in 
-          if (c_num == limite) then c_mot
-          else val_coupe_rec c_num c_mot queue;
-        else val_coupe_rec compteur_num (compteur_mot+1) queue;
-      |[]->0 in 
-  val_coupe_rec 0 0 liste;;
 
 
 	
@@ -248,7 +257,7 @@ let trapeze = fun list ->
                            ent_ext = List.nth exter_points (!milieu-1) ;
                            sort_int = List.nth inter_points 0;
                            sort_ext = List.nth exter_points 0};
-  for i = 0 to (!milieu-1) do print_portion trap_tab.(i) done;
+  (*for i = 0 to (!milieu-1) do print_portion_float trap_tab.(i) done;*)
   trap_tab;;
  
  
@@ -262,13 +271,16 @@ let trapeze = fun list ->
 	
 let main = fun _ ->
 	let list_point = conv () in
+	Printf.printf "\n\n####  LIST VERSION  ####\n";
 	print_list list_point;
 
-	let tab_point = trapeze list_point in
+	let tab_point = trapeze list_point in	
+	Printf.printf "\n\n####  TAB FLOAT  ####\n";
 	print_tab tab_point;
+	Printf.printf "\n\n####  TAB INT  ####\n";
 	print_tab_int tab_point;;
 
-	
-
+(* Debug test*)
+main ();;
 
 
