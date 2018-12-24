@@ -1,6 +1,13 @@
 open Type;;
+
 let fichier = "dessin3.svg"
 
+
+(* ################################################################### *)
+(*	                                                                   *)
+(*                           STRING FUNCTION                           *)
+(*	                                                                   *)
+(* ################################################################### *)
 
 
 let split_on_char sep s =
@@ -21,25 +28,70 @@ let trad = fun text ->
 let print_txt = fun a -> Printf.printf " %s |" a;; 
 let print_tuple = fun (x,y) -> Printf.printf "%f,%f\n" x y;;  
 let somme = fun (x,y) (v,w) -> (x+.v,y+.w);;
-let print_portion = fun port ->
+
+
+
+(* ################################################################### *)
+(*	                                                                   *)
+(*                         CONVERTING FUNCTION                         *)
+(*	                                                                   *)
+(* ################################################################### *)
+
+let couple_int_of_float = fun couple ->
+	let (a,b) = couple in
+	let couple_int = (int_of_float a, int_of_float b) in
+	couple_int;;
+	
+
+let portion_int_of_float = fun port ->
+	let port_int = 
+		{ent_int_int = couple_int_of_float port.ent_int;
+		 ent_ext_int = couple_int_of_float port.ent_ext;
+		 sort_int_int = couple_int_of_float port.sort_int;
+		 sort_ext_int = couple_int_of_float port.sort_ext} in
+	port_int;;
+	
+	
+(* ################################################################### *)
+(*	                                                                   *)
+(*                   PRINTING SUBFUNCTION - ELEMENT                    *)
+(*	                                                                   *)
+(* ################################################################### *)
+
+	 
+(* PORTION PRINT - FLOATING VALUE *)	
+let print_portion_float = fun port ->
   let (a,b) = port.ent_int in
   let (c,d) = port.ent_ext in
   let (e,f) = port.sort_int in 
   let (g,h) = port.sort_ext in
   Printf.printf "(%f,%f) (%f,%f) (%f,%f) (%f,%f)\n" a b c d e f g h;;
-(* A function that will validate if the input is a ALPHA *)
 
+    
+
+(* PORTION PRINT - INTERGER VALUE *)	
+let print_portion_int = fun port ->
+	let (a,b) = port.ent_int_int in
+	let (c,d) = port.ent_ext_int in
+	let (e,f) = port.sort_int_int in 
+	let (g,h) = port.sort_ext_int in
+	Printf.printf "(%d,%d) (%d,%d) (%d,%d) (%d,%d)\n" a b c d e f g h;;
+
+
+(* Function that will validate if the input is a ALPHA *)
 let is_digit_or_moins = fun digit ->
   match digit with
       '0' .. '9' -> true;
     |'-' -> true;
-    | _ -> false;; 
+    | _ -> false;;
+    
 let rec compte_num = fun i liste -> 
   match liste with 
     |tete::queue->
       if (is_digit_or_moins ((List.hd liste).[0])) then (compte_num (i+1) queue)
       else compte_num i queue;
     |[]-> i;;
+    
 let val_coupe = fun liste -> 
   let limite = (compte_num 0 liste)/2 in 
   let rec val_coupe_rec = fun compteur_num compteur_mot liste ->
@@ -55,6 +107,41 @@ let val_coupe = fun liste ->
   val_coupe_rec 0 0 liste;;
 
 
+	
+(* ################################################################### *)
+(*	                                                                   *)
+(*                   PRINTING FUNCTION - GATHERING                     *)
+(*	                                                                   *)
+(* ################################################################### *)
+
+(* LIST PRINT - STRING VALUE *)
+let rec print_list = function 
+	[] -> ()
+	| e::l -> print_string e ; print_string " \n" ; print_list l;;
+
+	
+(* TABLE PRINT - FLOATING VALUE *)	
+let print_tab = fun tab ->
+	for i = 0 to (Array.length tab -1) do
+		print_portion_float tab.(i)
+	done;;
+
+
+(* TABLE PRINT - INTERGER VALUE *)
+let print_tab_int = fun tab ->
+	for i = 0 to (Array.length tab -1) do
+		let int_portion = portion_int_of_float tab.(i) in
+		print_portion_int int_portion
+	done;;
+	
+
+
+(* ################################################################### *)
+(*	                                                                   *)
+(*                        COORDINATE RECOVERY                          *)
+(*	                                                                   *)
+(* ################################################################### *)
+
 let coordfun = fun list ->
   let rec coord_rec = fun list coor ->
     match list with
@@ -65,8 +152,10 @@ let coordfun = fun list ->
       |_ ->["fin"] in
   coord_rec list [];;
 
-let conv = fun a ->
+
+let conv = fun _ ->
   let fic = open_in fichier in
+
   let rec conv_rec coord_list =
     try
       let ligne = input_line fic in
@@ -154,14 +243,32 @@ let trapeze = fun list ->
                       sort_int = List.nth inter_points (i+1);
                       sort_ext = List.nth exter_points (i+1)};
   done;
+
   trap_tab.(!milieu-1) <- {ent_int= List.nth inter_points (!milieu-1);
                            ent_ext = List.nth exter_points (!milieu-1) ;
                            sort_int = List.nth inter_points 0;
                            sort_ext = List.nth exter_points 0};
   for i = 0 to (!milieu-1) do print_portion trap_tab.(i) done;
   trap_tab;;
+ 
+ 
+  
 
-let a = conv 1;;
-trapeze a;;
+(* ################################################################### *)
+(*	                                                                   *)
+(*                             MAIN PROCESS                            *)
+(*	                                                                   *)
+(* ################################################################### *)
+	
+let main = fun _ ->
+	let list_point = conv () in
+	print_list list_point;
+
+	let tab_point = trapeze list_point in
+	print_tab tab_point;
+	print_tab_int tab_point;;
+
+	
+
 
 
