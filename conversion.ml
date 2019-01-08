@@ -1,6 +1,6 @@
 open Type;;
 
-let fichier = "dessin3.svg"
+let fichier = "dessinSimple.svg"
 
 
 (* ################################################################### *)
@@ -173,7 +173,7 @@ let conv = fun _ ->
       print_string "\n";*)
       let rec recherche = fun lsep ->
         match lsep with
-            "d=\"m"::queue ->List.rev (coordfun queue); 
+            "d=\"m"::queue | "d=\"M"::queue ->List.rev (coordfun queue); 
           |"</svg>"::_ -> [];
           |tete::queue -> recherche queue;
           |_ -> [] in 
@@ -202,12 +202,14 @@ let trapeze = fun list ->
   end;*)
   interieur := List.rev !interieur;
   exterieur := List.rev !exterieur;
+  (*
   List.iter print_txt !interieur;
   Printf.printf "%d points" (List.length !interieur);
   print_string "\n";
   List.iter print_txt !exterieur;
   Printf.printf  "%d points" (List.length !exterieur);
   print_string "\n";
+  *)
   let rec trace_points = fun mode acc liste_points liste ->
     match liste  with
       |[]-> List.rev liste_points;
@@ -270,15 +272,15 @@ let trapeze = fun list ->
 (* ################################################################### *)
 	
 let main = fun _ ->
-	let list_point = conv () in
+	(*let list_point = conv () in*)
 	Printf.printf "\n\n####  LIST VERSION  ####\n";
-	print_list list_point;
+	(*print_list list_point;*)
 
-	let tab_point = trapeze list_point in	
+	(*let tab_point = trapeze list_point in	*)
 	Printf.printf "\n\n####  TAB FLOAT  ####\n";
-	print_tab tab_point;
-	Printf.printf "\n\n####  TAB INT  ####\n";
-	print_tab_int tab_point;;
+	(*print_tab tab_point;*)
+	Printf.printf "\n\n####  TAB INT  ####\n";;
+	(*print_tab_int tab_point;;*)
 
 (* Debug test*)
 main ();;

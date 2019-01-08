@@ -12,6 +12,7 @@ open Printf;;
 open Init;;
 open Conversion;;
 open Type;;
+open Intersection;;
 
 Random.init;;
 
@@ -31,8 +32,9 @@ let x = ref 100;;
 let y = ref 100;;
 let angle = ref 0.;;
 let delta = ref 10;;
+let deltb = ref 10.;;
 
-let lamda = ref 10;;
+let lamda = ref 4;;
 
 
 
@@ -41,8 +43,9 @@ set_window_title "AI interface REV 2.0";;
 clear_graph ();;
 let circuit = Conversion.trapeze(conv ());;
 
+(*
 Init.draw_init ();;
-
+*)
 
 type point = {x : float; y : float};;
 let pi = 4.0 *. atan 1.0;;
@@ -79,8 +82,16 @@ let draw_portion = fun port ->
 	let (e,f) = port.sort_ext_int in 
 	let (g,h) = port.sort_int_int in
 	let segment = Array.map resize [| (a,b); (c,d); (e,f); (g,h); (a,b) |] in
-	draw_poly segment;
-	Printf.printf "(%d,%d) (%d,%d) (%d,%d) (%d,%d)\n" a b c d e f g h;;
+	if line_side_test (resize (a,b)) (resize (c,d)) (!x,!y) <= 0 &&
+		line_side_test (resize (c,d)) (resize (e,f)) (!x,!y) <= 0 &&
+		line_side_test (resize (e,f)) (resize (g,h)) (!x,!y) <= 0 &&		
+		line_side_test (resize (g,h)) (resize (a,b)) (!x,!y) <= 0		
+		then set_color green
+	else set_color blue;
+	fill_poly segment;
+	set_color black;
+	draw_poly segment;;
+	(*Printf.printf "(%d,%d) (%d,%d) (%d,%d) (%d,%d)\n" a b c d e f g h;;*)
 	
 let draw_circuit = fun _ ->	
 	set_color red;
@@ -95,7 +106,7 @@ let draw_bg = fun _ ->
 	moveto 10 36;
 	draw_string "Zoom with i (in) and o (out)";
 	moveto 10 22;
-	draw_string "Right click or hjkl to move car";
+	draw_string "Right click or hjkl | bn to move car";
 	moveto 10 8;
 	draw_string "Press q exit";
 	draw_circuit ();;
@@ -127,6 +138,7 @@ let print_status = fun _ ->
 (*	                                                                   *)
 (* ################################################################### *)
 
+let car_update = ref true in
 let condi = ref true in
 while !condi do
 
@@ -137,23 +149,29 @@ while !condi do
 		x := s.mouse_x;
 		y := s.mouse_y;
 		angle := (Random.float 360.);
-		draw_car !x !y !angle;
+		car_update := true;
 		end
 	else if s.keypressed then begin
 		let c = s.key in
 		match c with
 		'q' | 'Q' -> condi := false;
-		| 'h' -> x := !x - !delta; draw_car !x !y !angle;
-		| 'l' -> x := !x + !delta; draw_car !x !y !angle;
-		| 'j' -> y := !y - !delta; draw_car !x !y !angle;
-		| 'k' -> y := !y + !delta; draw_car !x !y !angle;
+		| 'h' -> x := !x - !delta; car_update := true;
+		| 'l' -> x := !x + !delta; car_update := true;
+		| 'j' -> y := !y - !delta; car_update := true;
+		| 'k' -> y := !y + !delta; car_update := true;
+		| 'b' -> angle := !angle +. !deltb; car_update := true;
+		| 'n' -> angle := !angle -. !deltb; car_update := true;
 		| 'i' -> lamda := !lamda + 1;
 		| 'o' -> lamda := !lamda - 1;
 		| _ -> key_handler s c;
 		
 		end;
-	
+		
 	draw_bg ();
+	
+	if !car_update then draw_car !x !y !angle;
+	car_update := false;
+	
 	print_status ();
 		
 done;;
