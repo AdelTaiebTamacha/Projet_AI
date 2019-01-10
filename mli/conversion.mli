@@ -9,7 +9,7 @@ val split_on_char : char -> string -> string list
 (**[split_on_char separator string] Split the string according to the separator*) 
 
 val trad : string -> float * float
-(**########################################*) 
+(** [trad sting] Convert the given tuple of sting format into tuple of float coordinates*) 
 
 val print_txt : string -> unit
 (**[trad text] Surfomated printing text*) 
@@ -27,7 +27,7 @@ val compte_num : int -> string list -> int
 (** [compte_num index list] Return the occurrence number of element in (1 to 9,-) from the given list *) 
 
 val val_coupe : string list -> int
-(**########################################*)
+(** [val_coupe list] Search the number of point in the circuit from the given string list*)
 
 val couple_int_of_float : float * float -> int * int
 (** [couple_int_of_float (a,b)] Convert the given tuple of floating coordinates into integer coordinates*) 
@@ -51,7 +51,7 @@ val print_tab_int : Type.portion_float array -> unit
 (** [print_tab_int table] Print the given table of portion of integer coordinates*) 
 
 val coordfun : string list -> string list
-(**########################################*)
+(** [coordfun list] Return only the tuple and character from the given lsit for circuit creation*)
 
 
 val conv : 'a -> string list

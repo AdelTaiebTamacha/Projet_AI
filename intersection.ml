@@ -20,28 +20,3 @@ let segments_intersect (a,b) (c,d) =
 (line_side_test c d a) * (line_side_test c d b) <= 0;;
 
 
-
-
-(* Test
-
-let p1 = (10, 10)  ;;
-let p2 = (50, 10) ;;
-let p3 = (100, 10) ;; 
-
-let p4 = (10, 50) ;; 
-let p5 = (50, 50) ;;
-let p6 = (100, 50) ;;
-
-let p7 = (10, 100) ;;
-let p8 = (50, 100) ;;
-let p9 = (100, 100) ;;
-
-
-
-if (segments_intersect (p1,p7) (p5,p3)) then 
-	Printf.printf "inter"
-else
-	Printf.printf "no inter";;
-	
-Printf.printf "\n\n";;
-*)
