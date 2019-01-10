@@ -37,7 +37,7 @@ set_window_title "AI interface REV 2.0";;
 clear_graph ();;
 Init.draw_init ();;
 
-let circuit = tab_int_of_float (trapeze(conv ()));;
+let circuit = create ();;
 let solution = search circuit;;
 
 

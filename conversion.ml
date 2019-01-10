@@ -1,6 +1,6 @@
 open Type;;
 
-let fichier = "dessinSimple.svg"
+let fichier = "dessin.svg"
 
 
 (* ################################################################### *)
@@ -23,20 +23,20 @@ let split_on_char sep s =
   
 let trad = fun text -> 
   let att = split_on_char ',' text in 
-  let x = float_of_string (List.hd att)in 
-  let y = float_of_string (List.hd (List.tl att))in
+  let x = int_of_float(float_of_string (List.hd att))in 
+  let y = int_of_float(float_of_string (List.hd (List.tl att)))in
   (x,y);;
   
 let print_txt = fun a -> Printf.printf " %s |" a;; 
-let print_tuple = fun (x,y) -> Printf.printf "%f,%f\n" x y;;  
-let somme = fun (x,y) (v,w) -> (x+.v,y+.w);;
+let print_tuple = fun (x,y) -> Printf.printf "%d,%d\n" x y;;  
+let somme = fun (x,y) (v,w) -> (x+v,y+w);;
 
-(* Function that will validate if the input is a ALPHA *)
 let is_digit_or_moins = fun digit ->
   match digit with
       '0' .. '9' -> true;
     |'-' -> true;
-    | _ -> false;;
+    | _ -> false;; 
+	
 
 (* ################################################################### *)
 (*	                                                                   *)
@@ -45,7 +45,7 @@ let is_digit_or_moins = fun digit ->
 (* ################################################################### *)
 	
 
-	
+  
 (* A function that will validate if the input is a ALPHA *)
 let rec compte_num = fun i liste -> 
   match liste with 
@@ -53,7 +53,7 @@ let rec compte_num = fun i liste ->
       if (is_digit_or_moins ((List.hd liste).[0])) then (compte_num (i+1) queue)
       else compte_num i queue;
     |[]-> i;;
-    
+
 let val_coupe = fun liste -> 
   let limite = (compte_num 0 liste)/2 in 
   let rec val_coupe_rec = fun compteur_num compteur_mot liste ->
@@ -153,15 +153,15 @@ let print_tab_int = fun tab ->
 		let int_portion = portion_int_of_float tab.(i) in
 		print_portion_int int_portion
 	done;;
+
+
 	
-
-
 (* ################################################################### *)
 (*	                                                                   *)
 (*                        COORDINATE RECOVERY                          *)
 (*	                                                                   *)
 (* ################################################################### *)
-
+	
 let coordfun = fun list ->
   let rec coord_rec = fun list coor ->
     match list with
@@ -172,7 +172,7 @@ let coordfun = fun list ->
       |_ ->["fin"] in
   coord_rec list [];;
 
-
+  
 let conv = fun _ ->
   let fic = open_in fichier in
   let rec conv_rec coord_list =
@@ -194,10 +194,10 @@ let conv = fun _ ->
 
 let trapeze = fun list -> 
   let milieu = ref (val_coupe list) in
-  let trap_tab = Array.make !milieu  {ent_int= (0.,0.);
-                                      ent_ext = (0.,0.);
-                                      sort_int = (0.,0.);
-                                      sort_ext = (0.,0.)} in
+  let trap_tab = Array.make !milieu  {ent_int_int= (0,0);
+                                      ent_ext_int = (0,0);
+                                      sort_int_int = (0,0);
+                                      sort_ext_int = (0,0)} in
   let interieur = ref [] in
   let exterieur = ref [] in 
   for i = 0 to (!milieu-1) do
@@ -212,14 +212,14 @@ let trapeze = fun list ->
   end;*)
   interieur := List.rev !interieur;
   exterieur := List.rev !exterieur;
-  (*
+  
   List.iter print_txt !interieur;
   Printf.printf "%d points" (List.length !interieur);
   print_string "\n";
   List.iter print_txt !exterieur;
   Printf.printf  "%d points" (List.length !exterieur);
   print_string "\n";
-  *)
+  
   let rec trace_points = fun mode acc liste_points liste ->
     match liste  with
       |[]-> List.rev liste_points;
@@ -233,45 +233,45 @@ let trapeze = fun list ->
           |'L'-> let racc = trad tete in
                  let liste_points = racc::liste_points in
                  trace_points mode racc liste_points queue
-          |'v'-> let racc = (somme (0.,(float_of_string tete)) acc) in
+          |'v'-> let racc = (somme (0,int_of_float((float_of_string tete))) acc) in
                  let liste_points = racc::liste_points in
                  trace_points mode racc liste_points queue
-          |'h'-> let racc = (somme ((float_of_string tete),0.) acc) in
+          |'h'-> let racc = (somme (int_of_float((float_of_string tete)),0) acc) in
                  let liste_points = racc::liste_points in 
                  trace_points mode racc liste_points queue
           |'l'-> let racc = (somme (trad tete) acc) in 
                  let liste_points = racc::liste_points in
                  trace_points mode racc liste_points queue
-          |'H'-> let racc = ((float_of_string tete),(snd acc)) in 
+          |'H'-> let racc = (int_of_float((float_of_string tete)),(snd acc)) in 
                  let liste_points = racc::liste_points in
                  trace_points mode racc liste_points queue
-          |'V'-> let racc = ((fst acc),(float_of_string tete)) in 
+          |'V'-> let racc = ((fst acc),int_of_float((float_of_string tete))) in 
                  let liste_points = racc::liste_points in 
                  trace_points mode racc liste_points queue
           |_-> print_string "Lettre non connue";[] in
             
 
-  let inter_points = trace_points 'l' (0.,0.) [] !interieur in
-  let exter_points  = trace_points 'l' (0.,0.) [] !exterieur in
+  let inter_points = trace_points 'l' (0,0) [] !interieur in
+  let exter_points  = trace_points 'l' (0,0) [] !exterieur in
   if (List.length inter_points) != (List.length exter_points) then begin
     print_string "Les deux parties n'ont pas la bonne longueur !!!\n";
     exit 0;
   end;
   milieu := (List.length exter_points);
   for i = 0 to (!milieu-2) do
-    trap_tab.(i) <- { ent_int= List.nth inter_points i;
-                      ent_ext = List.nth exter_points i ;
-                      sort_int = List.nth inter_points (i+1);
-                      sort_ext = List.nth exter_points (i+1)};
+    trap_tab.(i) <- { ent_int_int= List.nth inter_points i;
+                      ent_ext_int = List.nth exter_points i ;
+                      sort_int_int = List.nth inter_points (i+1);
+                      sort_ext_int = List.nth exter_points (i+1)};
   done;
-
-  trap_tab.(!milieu-1) <- {ent_int= List.nth inter_points (!milieu-1);
-                           ent_ext = List.nth exter_points (!milieu-1) ;
-                           sort_int = List.nth inter_points 0;
-                           sort_ext = List.nth exter_points 0};
-  (*for i = 0 to (!milieu-1) do print_portion_float trap_tab.(i) done;*)
-  trap_tab;;
   
+  trap_tab.(!milieu-1) <- {ent_int_int= List.nth inter_points (!milieu-1);
+                           ent_ext_int = List.nth exter_points (!milieu-1) ;
+                           sort_int_int = List.nth inter_points 0;
+                           sort_ext_int = List.nth exter_points 0};
+  for i = 0 to (!milieu-1) do print_portion_int trap_tab.(i) done;
+  trap_tab;;
+
 let create = fun _ ->
   let a = conv () in
   trapeze a;;
@@ -286,13 +286,13 @@ let main = fun _ ->
 	let list_point = conv () in
 	Printf.printf "\n\n####  LIST VERSION  ####\n";
 	print_list list_point;
-
+(*
 	let tab_point = trapeze list_point in
 	Printf.printf "\n\n####  TAB FLOAT  ####\n";
 	print_tab_float tab_point;
 	Printf.printf "\n\n####  TAB INT  ####\n";
 	print_tab_int tab_point;;
-
+*)
 (* Debug test*)
 (*main ();;*)
 
