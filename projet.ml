@@ -1,4 +1,5 @@
 (* Calcul la puissance d'un entier *)
+open Type;;
 let rec puissance x n = match n with
 | 0 -> 1
 | _ -> x * (puissance x (n-1))
@@ -112,10 +113,6 @@ let accelere = fun coord vitesse ->
     let ys = int_of_float ((long +. 4.) *. sin(ang)) + y in
     (xs, ys);;
 
-let dis = distance (10,10) (5,5);;
-let ang = angleabs (10,10) (5,5);;
-let res = accelere (10,10) (5,5);;
-
 (* Coordonnée possible si on décélère *) 
 let decelere = fun coord vitesse ->
     let (x, y) = coord in 
@@ -124,8 +121,6 @@ let decelere = fun coord vitesse ->
     let xs = int_of_float ((long -. 4.) *. cos ang) + x in
     let ys = int_of_float ((long -. 4.) *. sin ang) + y in
     (xs, ys);;
-
-let res = decelere (10,10) (5,5);;
 
 
 (* Coordonnée possible si on tourne à gauche *)   
@@ -138,8 +133,6 @@ let gauche = fun coord vitesse minvit minang maxvit maxang->
     let xs = int_of_float (long *. cos(ang+. supang) ) + x in
     let ys = int_of_float (long *. sin(ang+. supang) )+ y in
     (xs, ys);;
-    
-let res = gauche (10,10) (5,5) 10. 5. 30. 1.;;
 
 (* Coordonnée possible si on tourne à droite *)
 let droite = fun coord vitesse minvit minang maxvit maxang->
@@ -209,7 +202,7 @@ let rec appartient = fun noeud liste -> match liste with
 (* Algorithme A* *) 
 (* ATTENTION : il faut rentrer une vitesse initiale qui soit comprise entre la vitesse minimale et maximale, par ailleurs l'angle de la vitesse minimale est supérieur à celui de la vitesse maximale *) 
 (* Coordinalg et coordfinald correspondent à les coordonnées du segment de fin *) 
-let aetoile = fun noeuddepart coordfinalg coordfinald vitesseinitiale minvit minang maxvit maxang (*circuit*)->
+let aetoile = fun noeuddepart coordfinalg coordfinald vitesseinitiale minvit minang maxvit maxang circuit->
    (*Initialisation des listes : ouverte et fermée, et variables *)
    let listeouverte = ref [] in
    let listefermee = ref [] in 
@@ -217,8 +210,8 @@ let aetoile = fun noeuddepart coordfinalg coordfinald vitesseinitiale minvit min
    let noeudobserve = ref {cout_g = 0.; cout_h = 0.; cout_f = 0.; parent = Some noeuddepart; coord = noeuddepart.coord; vitesse = (0,0)} in
    let indexcourant = ref 0 in
    let solution = ref [] in 
-   (*let paral = ref circuit.(0) in 
-   let indexparal = ref 0 in*)
+   let portion = ref circuit.(0) in 
+   let indexportion = ref 0 in
    (*Initialisation du noeud courant et ajout à la liste ouverte *)
    listeouverte := List.append !listeouverte [Noeud !noeudcourant];
    Printf.printf "taille liste ouverte :  %d\n" (List.length !listeouverte);
@@ -247,22 +240,25 @@ let aetoile = fun noeuddepart coordfinalg coordfinald vitesseinitiale minvit min
         (*Avoir la position du noeud*)
         let pos = poss.(k) in 
         (* Savoir la parallélogramme dans lequel on est *) 
-        (*let (entint,entext,sortint,sortext) = paral in 
-        (*Sors pas du terrain et ne fait pas demi-tour*)
-        if not(coupent entext sortext noeudcourant.coord pos)|| not(coupent entint sortint noeudcourant.coord pos)|| not(coupent entint entext noeucourant.coord pos)   then
+        let entint = !portion.ent_int in
+        let entext = !portion.ent_ext in
+        let sortint = !portion.sort_int in
+        let sortext = !portion.sort_ext in
         (*Si il va dans le parallélogramme d'après, on change la valeur de paral *)
-            if coupent sortint sortext noeudcourant.coord pos then 
-                  indexparal := !indexparal + 1;
-                  paral := circuit.(indexparal) *)
-         (* Vitesse *)
-        let vit = choixvitesse pos ! noeudcourant.coord in 
-        let speed = distance vit pos in 
-        Printf.printf "Vitesse : %d,%d\n" (fst vit) (snd vit);
-        (*Creer un nouveau noeud si la vitesse ne dépasse pas la vitesse max *)
-        let nouveaunoeud =  ref {cout_g =0.; cout_h=0.; cout_f=0.; parent = Some (! noeudcourant); coord= pos; vitesse = vit}in
-        (* Si la vitesse est valable on l'ajoute à la liste des enfants *)
-        if speed <= maxvit && speed >= minvit then 
-            enfants := List.append !enfants [Noeud ! nouveaunoeud]
+        if coupent sortint sortext !noeudcourant.coord pos then  
+          (indexportion := !indexportion + 1;
+           portion := circuit.(!indexportion)); 
+        (*Sors pas du terrain et ne fait pas demi-tour*)
+        if (not(coupent entext sortext !noeudcourant.coord pos))|| not(coupent entint sortint !noeudcourant.coord pos)|| not(coupent entint entext !noeudcourant.coord pos) then
+            (* Vitesse *)
+            let vit = choixvitesse pos ! noeudcourant.coord in 
+            let speed = distance vit pos in 
+            Printf.printf "Vitesse : %d,%d\n" (fst vit) (snd vit);
+            (*Creer un nouveau noeud si la vitesse ne dépasse pas la vitesse max *)
+            let nouveaunoeud =  ref {cout_g =0.; cout_h=0.; cout_f=0.; parent = Some (! noeudcourant); coord= pos; vitesse = vit}in
+            (* Si la vitesse est valable on l'ajoute à la liste des enfants *)
+            if speed <= maxvit && speed >= minvit then 
+                  enfants := List.append !enfants [Noeud ! nouveaunoeud]
       done;
       for k=0 to (List.length !enfants - 1) do
         Printf.printf "Noeud courant truc : %d,%d\n" (fst !noeudcourant.coord) (snd !noeudcourant.coord); 
@@ -305,10 +301,8 @@ type defnoeud = {mutable cout_g : float; mutable cout_h : float; mutable cout_f 
 *)
 let noeuddepart = {cout_g = 0.; cout_h = 0.; cout_f = 0.; parent = None; coord = (10,10); vitesse = (0,0)};;
 let noeudfinal = {cout_g = 0.; cout_h = 0.; cout_f = 0.; parent = None; coord = (0,200); vitesse = (0,0)};;
-let solution = aetoile noeuddepart (90,100) (100,90) (15,15) 5. 20. 80. 10.;;
+let solution = aetoile noeuddepart (90,100) (100,90) (15,15) 5. 40. 80. 10. ;;
 solution;;
-
-List.iter (fun (x,y) -> Printf.printf " Coord : %d, %d \n" x y) solution;;
 
 
   
