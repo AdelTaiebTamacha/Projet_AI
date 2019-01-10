@@ -1,12 +1,3 @@
-(* 
-To compile and run
-ocamlc graphics.cma type.ml conversion.ml init.ml interface.ml -o interface && ./interface
-ocamlc graphics.cma intersection.ml type.ml conversion.ml init.ml interface.ml -o interface && ./interface
-
-To run
-./interface or ./interface.exe
-*)
-
 
 open Graphics;;
 (*open Convert;;*)
@@ -138,46 +129,42 @@ let print_status = fun _ ->
 (*                              MAIN LOOP                              *)
 (*	                                                                   *)
 (* ################################################################### *)
+let main_loop = fun _ ->
+	let car_update = ref true in
+	let condi = ref true in
+	while !condi do
 
-let car_update = ref true in
-let condi = ref true in
-while !condi do
 
-
-	let s = wait_next_event[Button_down; Key_pressed] in
-	clear_graph ();
-	if s.button then begin
-		x := s.mouse_x;
-		y := s.mouse_y;
-		angle := (Random.float 360.);
-		car_update := true;
-		end
-	else if s.keypressed then begin
-		let c = s.key in
-		match c with
-		'q' | 'Q' -> condi := false;
-		| 'h' -> x := !x - !delta; car_update := true;
-		| 'l' -> x := !x + !delta; car_update := true;
-		| 'j' -> y := !y - !delta; car_update := true;
-		| 'k' -> y := !y + !delta; car_update := true;
-		| 'b' -> angle := !angle +. !deltb; car_update := true;
-		| 'n' -> angle := !angle -. !deltb; car_update := true;
-		| 'i' -> lamda := !lamda + 1;
-		| 'o' -> lamda := !lamda - 1;
-		| _ -> key_handler s c;
+		let s = wait_next_event[Button_down; Key_pressed] in
+		clear_graph ();
+		if s.button then begin
+			x := s.mouse_x;
+			y := s.mouse_y;
+			angle := (Random.float 360.);
+			car_update := true;
+			end
+		else if s.keypressed then begin
+			let c = s.key in
+			match c with
+			'q' | 'Q' -> condi := false;
+			| 'h' -> x := !x - !delta; car_update := true;
+			| 'l' -> x := !x + !delta; car_update := true;
+			| 'j' -> y := !y - !delta; car_update := true;
+			| 'k' -> y := !y + !delta; car_update := true;
+			| 'b' -> angle := !angle +. !deltb; car_update := true;
+			| 'n' -> angle := !angle -. !deltb; car_update := true;
+			| 'i' -> lamda := !lamda + 1;
+			| 'o' -> lamda := !lamda - 1;
+			| _ -> key_handler s c;
+			
+			end;
+			
+		draw_bg ();
 		
-		end;
+		if !car_update then draw_car !x !y !angle;
+		car_update := false;
 		
-	draw_bg ();
-	
-	if !car_update then draw_car !x !y !angle;
-	car_update := false;
-	
-	print_status ();
-		
-done;;
-
-
-
-
-close_graph;;
+		print_status ();
+			
+	done;
+	close_graph;;
