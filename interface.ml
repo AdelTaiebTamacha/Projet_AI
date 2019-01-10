@@ -1,6 +1,8 @@
 (* 
 To compile and run
 ocamlc graphics.cma type.ml conversion.ml init.ml interface.ml -o interface && ./interface
+ocamlc graphics.cma intersection.ml type.ml conversion.ml init.ml interface.ml -o interface && ./interface
+
 To run
 ./interface or ./interface.exe
 *)
@@ -47,7 +49,6 @@ let circuit = Conversion.trapeze(conv ());;
 Init.draw_init ();;
 *)
 
-type point = {x : float; y : float};;
 let pi = 4.0 *. atan 1.0;;
 
 

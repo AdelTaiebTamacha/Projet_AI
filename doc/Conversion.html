@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="next" href="Init.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Conversion" rel="Chapter" href="Conversion.html">
+<link title="Init" rel="Chapter" href="Init.html">
+<link title="Interface" rel="Chapter" href="Interface.html">
+<link title="Intersection" rel="Chapter" href="Intersection.html">
+<link title="Projet" rel="Chapter" href="Projet.html">
+<link title="Test" rel="Chapter" href="Test.html">
+<link title="Type" rel="Chapter" href="Type.html"><title>Recherche plus court chemin : Conversion</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Init.html" title="Init">Next</a>
+</div>
+<h1>Module <a href="type_Conversion.html">Conversion</a></h1>
+
+<pre><span id="MODULEConversion"><span class="keyword">module</span> Conversion</span>: <code class="code">sig</code> <a href="Conversion.html">..</a> <code class="code">end</code></pre><div class="info module top">
+<div class="info-desc">
+<p>Conversion module is mainly for recovering and convertion of cuircuit elements</p>
+</div>
+</div>
+<hr width="100%">
+
+<pre><span id="VALfichier"><span class="keyword">val</span> fichier</span> : <code class="type">string</code></pre><div class="info ">
+<div class="info-desc">
+<p>The circuit .svg file</p>
+</div>
+</div>
+
+<pre><span id="VALsplit_on_char"><span class="keyword">val</span> split_on_char</span> : <code class="type">char -> string -> string list</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">split_on_char separator string</code> Split the string according to the separator</p>
+</div>
+</div>
+
+<pre><span id="VALtrad"><span class="keyword">val</span> trad</span> : <code class="type">string -> float * float</code></pre><div class="info ">
+<div class="info-desc">
+<p>########################################</p>
+</div>
+</div>
+
+<pre><span id="VALprint_txt"><span class="keyword">val</span> print_txt</span> : <code class="type">string -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">trad text</code> Surfomated printing text</p>
+</div>
+</div>
+
+<pre><span id="VALprint_tuple"><span class="keyword">val</span> print_tuple</span> : <code class="type">float * float -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">print_tuple (a,b)</code> Print the tuple coordinates on a single line</p>
+</div>
+</div>
+
+<pre><span id="VALsomme"><span class="keyword">val</span> somme</span> : <code class="type">float * float -> float * float -> float * float</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">somme (a,b) (c,d)</code> Return the addition of the two given tuple (a+c,b+d)</p>
+</div>
+</div>
+
+<pre><span id="VALis_digit_or_moins"><span class="keyword">val</span> is_digit_or_moins</span> : <code class="type">char -> bool</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">is_digit_or_moins character</code> Return true if the character is in (1 to 9,-), return false otherwise</p>
+</div>
+</div>
+
+<pre><span id="VALcompte_num"><span class="keyword">val</span> compte_num</span> : <code class="type">int -> string list -> int</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">compte_num index list</code> Return the occurrence number of element in (1 to 9,-) from the given list</p>
+</div>
+</div>
+
+<pre><span id="VALval_coupe"><span class="keyword">val</span> val_coupe</span> : <code class="type">string list -> int</code></pre><div class="info ">
+<div class="info-desc">
+<p>########################################</p>
+</div>
+</div>
+
+<pre><span id="VALcouple_int_of_float"><span class="keyword">val</span> couple_int_of_float</span> : <code class="type">float * float -> int * int</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">couple_int_of_float (a,b)</code> Convert the given tuple of floating coordinates into integer coordinates</p>
+</div>
+</div>
+
+<pre><span id="VALportion_int_of_float"><span class="keyword">val</span> portion_int_of_float</span> : <code class="type"><a href="Type.html#TYPEportion_float">Type.portion_float</a> -> <a href="Type.html#TYPEportion_int">Type.portion_int</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">portion_int_of_float portion</code> Convert the given portion of floating coordinates into integer coordinates</p>
+</div>
+</div>
+
+<pre><span id="VALprint_portion_float"><span class="keyword">val</span> print_portion_float</span> : <code class="type"><a href="Type.html#TYPEportion_float">Type.portion_float</a> -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">print_portion_float portion</code> Print the coordinates of the given portion of floating coordinates</p>
+</div>
+</div>
+
+<pre><span id="VALprint_portion_int"><span class="keyword">val</span> print_portion_int</span> : <code class="type"><a href="Type.html#TYPEportion_int">Type.portion_int</a> -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">print_portion_int portion</code> Print the coordinates of the given portion of integer coordinates</p>
+</div>
+</div>
+
+<pre><span id="VALprint_list"><span class="keyword">val</span> print_list</span> : <code class="type">string list -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">print_list list</code> Print the given list</p>
+</div>
+</div>
+
+<pre><span id="VALprint_tab_float"><span class="keyword">val</span> print_tab_float</span> : <code class="type"><a href="Type.html#TYPEportion_float">Type.portion_float</a> array -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">print_tab_float table</code> Print the given table of portion of floating coordinates</p>
+</div>
+</div>
+
+<pre><span id="VALprint_tab_int"><span class="keyword">val</span> print_tab_int</span> : <code class="type"><a href="Type.html#TYPEportion_float">Type.portion_float</a> array -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">print_tab_int table</code> Print the given table of portion of integer coordinates</p>
+</div>
+</div>
+
+<pre><span id="VALcoordfun"><span class="keyword">val</span> coordfun</span> : <code class="type">string list -> string list</code></pre><div class="info ">
+<div class="info-desc">
+<p>########################################</p>
+</div>
+</div>
+
+<pre><span id="VALconv"><span class="keyword">val</span> conv</span> : <code class="type">'a -> string list</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">conv ()</code> Convert the .svg circuit file into a circuit list of sting coordinates</p>
+</div>
+</div>
+
+<pre><span id="VALtrapeze"><span class="keyword">val</span> trapeze</span> : <code class="type">string list -> <a href="Type.html#TYPEportion_float">Type.portion_float</a> array</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">trapeze list</code> Convert the given list of string coordinates into a circuit table of portion of floating coordinates</p>
+</div>
+</div>
+
+<pre><span id="VALmain"><span class="keyword">val</span> main</span> : <code class="type">'a -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">main ()</code> For debug purpose only : print the list version, table of floating coordinates version and table of integer coordinates of the cuitcuit</p>
+</div>
+</div>
+</body></html>

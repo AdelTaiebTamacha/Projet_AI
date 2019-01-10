@@ -130,7 +130,7 @@ let rec print_list = function
 
 	
 (* TABLE PRINT - FLOATING VALUE *)	
-let print_tab = fun tab ->
+let print_tab_float = fun tab ->
 	for i = 0 to (Array.length tab -1) do
 		print_portion_float tab.(i)
 	done;;
@@ -278,7 +278,7 @@ let main = fun _ ->
 
 	(*let tab_point = trapeze list_point in	*)
 	Printf.printf "\n\n####  TAB FLOAT  ####\n";
-	(*print_tab tab_point;*)
+	(*print_tab_float tab_point;*)
 	Printf.printf "\n\n####  TAB INT  ####\n";;
 	(*print_tab_int tab_point;;*)
 
