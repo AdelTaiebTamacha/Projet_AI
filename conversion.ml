@@ -87,6 +87,16 @@ let portion_int_of_float = fun port ->
 		 sort_ext_int = couple_int_of_float port.sort_ext} in
 	port_int;;
 
+let tab_int_of_float = fun tab ->
+	let int_tab = Array.make (Array.length tab -1)  {ent_int_int= (0,0);
+													  ent_ext_int = (0,0);
+													  sort_int_int = (0,0);
+													  sort_ext_int = (0,0)} in
+	for i = 0 to (Array.length tab -1) do
+		let int_portion = portion_int_of_float tab.(i) in
+		int_tab.(i) <- int_portion
+	done;
+	int_tab;;
 	
 (* ################################################################### *)
 (*	                                                                   *)
@@ -272,15 +282,15 @@ let trapeze = fun list ->
 (* ################################################################### *)
 	
 let main = fun _ ->
-	(*let list_point = conv () in*)
+	let list_point = conv () in
 	Printf.printf "\n\n####  LIST VERSION  ####\n";
-	(*print_list list_point;*)
+	print_list list_point;
 
-	(*let tab_point = trapeze list_point in	*)
+	let tab_point = trapeze list_point in
 	Printf.printf "\n\n####  TAB FLOAT  ####\n";
-	(*print_tab_float tab_point;*)
-	Printf.printf "\n\n####  TAB INT  ####\n";;
-	(*print_tab_int tab_point;;*)
+	print_tab_float tab_point;
+	Printf.printf "\n\n####  TAB INT  ####\n";
+	print_tab_int tab_point;;
 
 (* Debug test*)
 main ();;

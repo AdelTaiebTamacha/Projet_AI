@@ -1,5 +1,9 @@
-(* Calcul la puissance d'un entier *)
 open Type;;
+open Intersection;;
+open Conversion;;
+
+
+(* Calcul la puissance d'un entier *)
 let rec puissance x n = match n with
 | 0 -> 1
 | _ -> x * (puissance x (n-1))
@@ -240,10 +244,10 @@ let aetoile = fun noeuddepart coordfinalg coordfinald vitesseinitiale minvit min
         (*Avoir la position du noeud*)
         let pos = poss.(k) in 
         (* Savoir la parallélogramme dans lequel on est *) 
-        let entint = !portion.ent_int in
-        let entext = !portion.ent_ext in
-        let sortint = !portion.sort_int in
-        let sortext = !portion.sort_ext in
+        let entint = !portion.ent_int_int in
+        let entext = !portion.ent_ext_int in
+        let sortint = !portion.sort_int_int in
+        let sortext = !portion.sort_ext_int in
         (*Si il va dans le parallélogramme d'après, on change la valeur de paral *)
         if coupent sortint sortext !noeudcourant.coord pos then  
           (indexportion := !indexportion + 1;
@@ -299,10 +303,20 @@ aetoile noeuddepart noeudfinal vitesseinitiale minvit minang maxvit maxang
 type defnoeud = {mutable cout_g : float; mutable cout_h : float; mutable cout_f : float; mutable parent : defnoeud; mutable coord : int*int; mutable vitesse : int*int};;
 
 *)
+(*
 let noeuddepart = {cout_g = 0.; cout_h = 0.; cout_f = 0.; parent = None; coord = (10,10); vitesse = (0,0)};;
 let noeudfinal = {cout_g = 0.; cout_h = 0.; cout_f = 0.; parent = None; coord = (0,200); vitesse = (0,0)};;
 let solution = aetoile noeuddepart (90,100) (100,90) (15,15) 5. 40. 80. 10. ;;
 solution;;
 
+*)
 
-  
+let search = fun circuit ->
+	
+	let coord_depart = middle_start circuit.(0) in
+	let noeuddepart = {cout_g = 0.; cout_h = 0.; cout_f = 0.; parent = None; coord = coord_depart; vitesse = (0,0)} in
+	let noeudfinal = {cout_g = 0.; cout_h = 0.; cout_f = 0.; parent = None; coord = coord_depart; vitesse = (0,0)} in
+	let solution = aetoile noeuddepart (90,100) (100,90) (15,15) 5. 40. 80. 10. circuit in
+	solution;;
+
+

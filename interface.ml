@@ -5,6 +5,7 @@ open Printf;;
 open Init;;
 open Conversion;;
 open Type;;
+open Projet;;
 open Intersection;;
 
 Random.init;;
@@ -34,11 +35,12 @@ let lamda = ref 4;;
 open_graph (sprintf "%dx%d-%dx%d" width height window_x window_y);;
 set_window_title "AI interface REV 2.0";;
 clear_graph ();;
-let circuit = Conversion.trapeze(conv ());;
-
-(*
 Init.draw_init ();;
-*)
+
+let circuit = tab_int_of_float (trapeze(conv ()));;
+(*let solution = search circuit;;*)
+
+
 
 let pi = 4.0 *. atan 1.0;;
 
@@ -88,8 +90,7 @@ let draw_portion = fun port ->
 let draw_circuit = fun _ ->	
 	set_color red;
 	for i = 0 to (Array.length circuit -1) do
-		let int_portion = portion_int_of_float circuit.(i) in
-		draw_portion int_portion
+		draw_portion circuit.(i)
 	done;
 	set_color black;;
 	
