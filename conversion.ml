@@ -45,7 +45,8 @@ let is_digit_or_moins = fun digit ->
 (* ################################################################### *)
 	
 
-    
+	
+(* A function that will validate if the input is a ALPHA *)
 let rec compte_num = fun i liste -> 
   match liste with 
     |tete::queue->
@@ -174,7 +175,6 @@ let coordfun = fun list ->
 
 let conv = fun _ ->
   let fic = open_in fichier in
-
   let rec conv_rec coord_list =
     try
       let ligne = input_line fic in
@@ -271,9 +271,10 @@ let trapeze = fun list ->
                            sort_ext = List.nth exter_points 0};
   (*for i = 0 to (!milieu-1) do print_portion_float trap_tab.(i) done;*)
   trap_tab;;
- 
- 
   
+let create = fun _ ->
+  let a = conv () in
+  trapeze a;;
 
 (* ################################################################### *)
 (*	                                                                   *)
@@ -293,6 +294,6 @@ let main = fun _ ->
 	print_tab_int tab_point;;
 
 (* Debug test*)
-main ();;
+(*main ();;*)
 
 

@@ -201,7 +201,19 @@ let rec appartient = fun noeud liste -> match liste with
    |Noeud h::q -> if h== noeud then
                     true
                  else 
-                    appartient noeud q;;                 
+                    appartient noeud q;;         
+					
+let milieu = fun coord1 coord2 -> 
+  let (x1,y1) = coord1 in 
+  let (x2,y2) = coord2 in
+  ((x1+x2)/2,(y1+y2)/2);;		
+
+let milieu_trap = fun coord1 coord2 coord3 coord4-> 
+  let (x1,y1) = coord1 in 
+  let (x2,y2) = coord2 in
+  let (x3,y3) = coord3 in
+  let (x4,y4) = coord4 in
+  ((x1+x2+x3+x4)/4,(y1+y2+y3+y4)/4);;  
    
 (* Algorithme A* *) 
 (* ATTENTION : il faut rentrer une vitesse initiale qui soit comprise entre la vitesse minimale et maximale, par ailleurs l'angle de la vitesse minimale est supérieur à celui de la vitesse maximale *) 
@@ -210,7 +222,7 @@ let aetoile = fun noeuddepart coordfinalg coordfinald vitesseinitiale minvit min
    (*Initialisation des listes : ouverte et fermée, et variables *)
    let listeouverte = ref [] in
    let listefermee = ref [] in 
-   let noeudcourant = ref {cout_g = 0.; cout_h = distance noeuddepart.coord  coordfinalg; cout_f = distance  noeuddepart.coord  coordfinalg; parent = Some noeuddepart; coord = noeuddepart.coord; vitesse = vitesseinitiale} in
+   let noeudcourant = ref {cout_g = 0.; cout_h = distance noeuddepart.coord  (milieu coordfinalg coordfinald); cout_f = distance  noeuddepart.coord  (milieu coordfinalg coordfinald) ; parent = None; coord = noeuddepart.coord; vitesse = vitesseinitiale} in
    let noeudobserve = ref {cout_g = 0.; cout_h = 0.; cout_f = 0.; parent = Some noeuddepart; coord = noeuddepart.coord; vitesse = (0,0)} in
    let indexcourant = ref 0 in
    let solution = ref [] in 
@@ -272,7 +284,7 @@ let aetoile = fun noeuddepart coordfinalg coordfinald vitesseinitiale minvit min
         if not (appartient  enfant !listefermee) then 
           (* créer les valeurs de f. g. et h.*)
           (enfant.cout_g <- ! noeudcourant.cout_g +. 1.;
-           enfant.cout_h <- distance  enfant.coord  coordfinalg;
+           enfant.cout_h <- distance  enfant.coord  (milieu coordfinalg coordfinald);
            enfant.cout_f <-  enfant.cout_g +.  enfant.cout_h;
              (* enfant est déjà dans la liste ouverte *)
            let continue = ref 0 in 
@@ -315,7 +327,7 @@ let search = fun circuit ->
 	
 	let coord_depart = middle_start circuit.(0) in
 	let noeuddepart = {cout_g = 0.; cout_h = 0.; cout_f = 0.; parent = None; coord = coord_depart; vitesse = (0,0)} in
-	let noeudfinal = {cout_g = 0.; cout_h = 0.; cout_f = 0.; parent = None; coord = coord_depart; vitesse = (0,0)} in
+	(*let noeudfinal = {cout_g = 0.; cout_h = 0.; cout_f = 0.; parent = None; coord = coord_depart; vitesse = (0,0)} in*)
 	let solution = aetoile noeuddepart (90,100) (100,90) (15,15) 5. 40. 80. 10. circuit in
 	solution;;
 

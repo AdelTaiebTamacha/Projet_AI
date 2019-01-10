@@ -38,7 +38,7 @@ clear_graph ();;
 Init.draw_init ();;
 
 let circuit = tab_int_of_float (trapeze(conv ()));;
-(*let solution = search circuit;;*)
+let solution = search circuit;;
 
 
 
@@ -103,6 +103,11 @@ let draw_bg = fun _ ->
 	moveto 10 8;
 	draw_string "Press q exit";
 	draw_circuit ();;
+
+let draw_solution = fun _ ->
+	let step = fun (x,y) ->	lineto x y in
+	List.iter step solution;;
+	
 	
 
 (* ################################################################### *)
@@ -161,6 +166,8 @@ let main_loop = fun _ ->
 			end;
 			
 		draw_bg ();
+		draw_solution ();
+		
 		
 		if !car_update then draw_car !x !y !angle;
 		car_update := false;
